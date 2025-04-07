@@ -5,111 +5,277 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Math Battle Game</title>
-  <!-- Add Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
   <style>
-      body {
-          margin: 0;
-          padding: 0;
-          height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-family: 'Poppins', sans-serif;
-          background: linear-gradient(135deg, #1e3c72, #2a5298);
-          color: white;
-      }
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      flex-direction: column;
+    }
 
-      .container {
-          text-align: center;
-          padding: 20px;
-          width: 90%;
-          max-width: 400px;
-      }
+    .container {
+      text-align: center;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+    }
 
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      color: #ffdd57;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    @media (max-width: 600px) {
       h1 {
-          font-size: 2.5em;
-          margin-bottom: 20px;
-          text-transform: uppercase;
-          letter-spacing: 1.5px;
-          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-          color: #ffdd57;
+        font-size: 1.8em;
       }
 
-      /* (rest of your styles stay the same) */
+      .card {
+        padding: 15px;
+      }
 
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+      button {
+        font-size: 0.9em;
+        padding: 8px 16px;
+      }
+    }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
+    #lobby-screen,
+    #waiting-screen,
+    #game-screen,
+    #player-screen {
+      display: none;
+    }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: none;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
+    #boss-health-bar {
+      width: 100%;
+      background: #ddd;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
 
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 10px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 1em;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5em;
-            }
-
-            .card {
-                padding: 15px;
-            }
-
-            button {
-                font-size: 0.9em;
-                padding: 8px 16px;
-            }
-        }
-    </style>
+    #boss-health-fill {
+      height: 20px;
+      width: 100%;
+      background: #e74c3c;
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Math Battle Game</h1>
-
-        <div class="card">
-            <h2>Create a Game</h2>
-            <p>A code for the lobby will be randomly generated.</p>
-            <button>Create Lobby</button>
-        </div>
-
-        <div class="card">
-            <h2>Join Lobby</h2>
-            <input type="text" placeholder="Enter Lobby Code">
-            <button>Join Lobby</button>
-        </div>
+  <div class="container" id="main-screen">
+    <h1>Math Battle Game</h1>
+    <div class="card">
+      <h2>Create a Game</h2>
+      <p>A code for the lobby will be randomly generated.</p>
+      <button id="create-lobby-btn">Create Lobby</button>
     </div>
+    <div class="card">
+      <h2>Join Lobby</h2>
+      <input type="text" id="join-code-input" placeholder="Enter Lobby Code">
+      <input type="text" id="username-input" placeholder="Enter Your Name">
+      <button id="join-lobby-btn">Join Lobby</button>
+    </div>
+  </div>
+
+  <div class="container" id="lobby-screen">
+    <h1>Lobby: <span id="lobby-code-display"></span></h1>
+    <p>Waiting for players to join...</p>
+    <div id="lobby-players">
+      <p><strong>Players in Lobby:</strong></p>
+      <ul id="players-list"></ul>
+    </div>
+    <button id="start-game-btn">Start Game</button>
+  </div>
+
+  <div class="container" id="waiting-screen">
+    <h1>Waiting for Host...</h1>
+    <p>Lobby Code: <span id="waiting-code-display"></span></p>
+    <p>Welcome, <span id="waiting-player-name"></span>!</p>
+  </div>
+
+  <div class="container" id="game-screen">
+    <div id="boss-health-bar">
+      <div id="boss-health-fill"></div>
+    </div>
+    <h2 id="question-text">Question will appear here</h2>
+    <div class="card" id="choices-container"></div>
+  </div>
+
+  <div class="container" id="player-screen">
+    <h2>Choose your answer:</h2>
+    <div class="card" id="player-choices"></div>
+  </div>
+
+  <script>
+    let currentLobbyCode = "";
+    let bossHealth = 100;
+    const sampleQuestion = {
+      question: "What is the result of 3 + 4?",
+      choices: ["A", "B", "C", "D"],
+      correctIndex: 2 // "C"
+    };
+
+    const correctAnswerLetter = ["A", "B", "C", "D"][sampleQuestion.correctIndex];
+
+    document.getElementById('create-lobby-btn').addEventListener('click', () => {
+      currentLobbyCode = Math.random().toString(36).substr(2, 6).toUpperCase();
+      document.getElementById('main-screen').style.display = 'none';
+      document.getElementById('lobby-screen').style.display = 'block';
+      document.getElementById('lobby-code-display').textContent = currentLobbyCode;
+
+      const players = ["Host (You)"];
+      localStorage.setItem('lobbyCode', currentLobbyCode);
+      localStorage.setItem('players', JSON.stringify(players));
+      localStorage.setItem('answers', JSON.stringify([]));
+
+      renderPlayers();
+    });
+
+    document.getElementById('join-lobby-btn').addEventListener('click', () => {
+      const enteredCode = document.getElementById('join-code-input').value.trim().toUpperCase();
+      const username = document.getElementById('username-input').value.trim();
+      const storedCode = localStorage.getItem('lobbyCode');
+
+      if (!enteredCode || !username) {
+        alert('Please enter both a lobby code and your name.');
+        return;
+      }
+
+      if (enteredCode === storedCode) {
+        let players = JSON.parse(localStorage.getItem('players')) || [];
+        players.push(username);
+        localStorage.setItem('players', JSON.stringify(players));
+
+        document.getElementById('main-screen').style.display = 'none';
+        document.getElementById('player-screen').style.display = 'block';
+        renderPlayerChoices();
+      } else {
+        alert('Invalid lobby code.');
+      }
+    });
+
+    function renderPlayers() {
+      const players = JSON.parse(localStorage.getItem('players')) || [];
+      const playersList = document.getElementById('players-list');
+      playersList.innerHTML = '';
+      players.forEach(player => {
+        const li = document.createElement('li');
+        li.textContent = player;
+        playersList.appendChild(li);
+      });
+    }
+
+    document.getElementById('start-game-btn').addEventListener('click', () => {
+      document.getElementById('lobby-screen').style.display = 'none';
+      document.getElementById('game-screen').style.display = 'block';
+      document.getElementById('question-text').textContent = sampleQuestion.question;
+
+      const container = document.getElementById('choices-container');
+      container.innerHTML = '';
+      sampleQuestion.choices.forEach(choice => {
+        const div = document.createElement('div');
+        div.textContent = `${choice}`;
+        container.appendChild(div);
+      });
+    });
+
+    function renderPlayerChoices() {
+      const container = document.getElementById('player-choices');
+      container.innerHTML = '';
+      sampleQuestion.choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = choice;
+        btn.onclick = () => submitAnswer(choice);
+        container.appendChild(btn);
+      });
+    }
+
+    function submitAnswer(choice) {
+      const username = document.getElementById('username-input')?.value.trim() || 'Host (You)';
+      let answers = JSON.parse(localStorage.getItem('answers')) || [];
+      if (answers.find(a => a.name === username)) return;
+      const correct = choice === correctAnswerLetter;
+      answers.push({ name: username, correct });
+      localStorage.setItem('answers', JSON.stringify(answers));
+
+      const buttons = document.querySelectorAll('#player-choices button');
+      buttons.forEach(btn => btn.disabled = true);
+
+      checkAllAnswered();
+    }
+
+    function checkAllAnswered() {
+      const players = JSON.parse(localStorage.getItem('players')) || [];
+      const answers = JSON.parse(localStorage.getItem('answers')) || [];
+
+      if (answers.length === players.length) {
+        const correctCount = answers.filter(a => a.correct).length;
+        const damage = correctCount * 10;
+        bossHealth -= damage;
+        if (bossHealth < 0) bossHealth = 0;
+        document.getElementById('boss-health-fill').style.width = bossHealth + '%';
+        alert(`${correctCount} players answered correctly. Boss took ${damage} damage!`);
+      }
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'players') renderPlayers();
+      if (e.key === 'answers') checkAllAnswered();
+    });
+  </script>
 </body>
 
 </html>
