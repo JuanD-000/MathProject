@@ -1,76 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Math Battle Game</title>
-  <link rel="stylesheet" href="style.css">
+  <!-- Add Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <style>
+      body {
+          margin: 0;
+          padding: 0;
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-family: 'Poppins', sans-serif;
+          background: linear-gradient(135deg, #1e3c72, #2a5298);
+          color: white;
+      }
+
+      .container {
+          text-align: center;
+          padding: 20px;
+          width: 90%;
+          max-width: 400px;
+      }
+
+      h1 {
+          font-size: 2.5em;
+          margin-bottom: 20px;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+          color: #ffdd57;
+      }
+
+      /* (rest of your styles stay the same) */
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            button {
+                font-size: 0.9em;
+                padding: 8px 16px;
+            }
+        }
+    </style>
 </head>
+
 <body>
-
-  <header>
-    <h1>Welcome to the Math Battle Game</h1>
-  </header>
-
-  <main>
     <div class="container">
-      <!-- Create Lobby Section -->
-      <div class="card">
-        <h2>Create a Game</h2>
-        <p>A code for the lobby will be randomly generated.</p>
-        <button onclick="createLobby()">Create Lobby</button>
-      </div>
+        <h1>Math Battle Game</h1>
 
-      <!-- Join Lobby Section -->
-      <div class="card">
-        <h2>Join a Game</h2>
-        <p>Enter a lobby code to join an existing game:</p>
-        <input type="text" id="lobbyCode" placeholder="Enter lobby code...">
-        <button onclick="joinLobby()">Join Lobby</button>
-      </div>
+        <div class="card">
+            <h2>Create a Game</h2>
+            <p>A code for the lobby will be randomly generated.</p>
+            <button>Create Lobby</button>
+        </div>
+
+        <div class="card">
+            <h2>Join Lobby</h2>
+            <input type="text" placeholder="Enter Lobby Code">
+            <button>Join Lobby</button>
+        </div>
     </div>
-
-    <!-- Add Math Problem Section -->
-    <div class="math-problem-card">
-      <h2>Add a Math Problem</h2>
-      <p>Submit a math problem for the game:</p>
-      <input type="text" id="mathProblem" placeholder="Enter a math problem...">
-      <button onclick="submitProblem()">Submit Problem</button>
-    </div>
-  </main>
-
-  <footer>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">Rules</a>
-      <a href="#">Contact</a>
-    </nav>
-  </footer>
-
-  <script>
-    function createLobby() {
-      let lobbyCode = Math.floor(1000 + Math.random() * 9000); // Generates a random 4-digit lobby code
-      alert(`Lobby created! Share this code with others: ${lobbyCode}`);
-    }
-
-    function joinLobby() {
-      let code = document.getElementById("lobbyCode").value;
-      if (code.trim() === "") {
-        alert("Please enter a valid lobby code!");
-        return;
-      }
-      alert(`Joining lobby ${code}...`);
-    }
-
-    function submitProblem() {
-      let problem = document.getElementById("mathProblem").value;
-      if (problem.trim() === "") {
-        alert("Please enter a math problem!");
-        return;
-      }
-      alert(`Problem added: ${problem}`);
-    }
-  </script>
-
 </body>
+
 </html>
