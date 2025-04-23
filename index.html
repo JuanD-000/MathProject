@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Math Battle Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       padding: 0;
       height: 100vh;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      background: linear-gradient(270deg, #003973, #d4af37, #003973);
+      background-size: 600% 600%;
+      animation: gradientBG 20s ease infinite;
       color: white;
       overflow: hidden;
       position: relative;
@@ -20,6 +22,11 @@
       align-items: center;
       flex-direction: column;
       text-align: center;
+    }
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
     }
     .background {
       position: absolute;
@@ -40,11 +47,14 @@
       text-align: center;
       padding: 20px;
       width: 90%;
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
       opacity: 0;
       transform: scale(0.8);
       transition: opacity 1.5s ease, transform 1.5s ease;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
     .show {
       opacity: 1;
@@ -54,9 +64,9 @@
       margin-bottom: 20px;
       text-transform: uppercase;
       letter-spacing: 1.5px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
       color: #ffdd57;
-      text-align: center;
+      font-family: 'Orbitron', sans-serif;
     }
     .countdown-number {
       font-size: 5em;
@@ -68,28 +78,29 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .start-btn, .answer-btn {
-      padding: 12px 24px;
+      padding: 14px 30px;
       font-size: 1.2em;
       font-weight: bold;
       border: none;
       border-radius: 30px;
-      background-color: #ffdd57;
+      background: linear-gradient(to right, #ffd700, #ffa500);
       color: #1e3c72;
       cursor: pointer;
       margin: 10px;
-      transition: background-color 0.3s ease, transform 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .start-btn:hover, .answer-btn:hover {
-      background-color: #ffd633;
       transform: scale(1.05);
+      box-shadow: 0 0 15px #ffd700;
     }
     #question-img {
       width: 100%;
-      max-width: 400px;
-      border-radius: 15px;
+      max-width: 500px;
+      border-radius: 20px;
       margin: 20px 0;
       opacity: 0;
       transition: opacity 1s ease;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
     }
     .fade-in {
       opacity: 1 !important;
@@ -129,149 +140,182 @@
     <h1>Math Battle Game</h1>
   </div>
   <script>
-    const container = document.getElementById('main-screen');
-    const background = document.getElementById('background');
+  const container = document.getElementById('main-screen');
+  const background = document.getElementById('background');
 
-    const questions = [
-  { img: 'https://i.postimg.cc/Y2TsCsMR/Screenshot-2025-04-21-212831.png', text: '', choices: ['v³ + 10v² + 75v + 125', 'v³ + 15v² + 70v + 100', 'v³ + 15v² + 75v + 125'], correct: 'C' },
-  { img: 'https://i.postimg.cc/MK9L7pS6/Screenshot-2025-04-21-230153.png', text: '', choices: ['81y⁴ + 216y³x + 216y²x² + 96yx³ + 16x⁴', '81y⁴ + 216y³x + 200y²x² + 90yx³ + 16x⁴', '81y⁴ + 200y³x + 216y²x² + 96yx³ + 12x⁴'], correct: 'A' },
-  { img: 'https://i.postimg.cc/2jLnSKN7/Screenshot-2025-04-21-230204.png', text: '', choices: ['1 + 6u + 18u² + 27u³', '1 + 9u + 27u² + 27u³', '1 + 9u + 24u² + 30u³'], correct: 'B' },
-  { img: 'https://i.postimg.cc/vBFbLTDB/Screenshot-2025-04-21-230212.png', text: '', choices: ['125y³ - 75y² + 15y - 1', '125y³ - 70y² + 10y - 1', '125y³ - 75y² + 10y + 1'], correct: 'A' },
-  { img: 'https://i.postimg.cc/65DjQvPy/Screenshot-2025-04-21-230220.png', text: '', choices: ['256 - 256v + 90v² - 12v³ + v⁴', '256 - 240v + 96v² - 16v³ + v⁴', '256 - 256v + 96v² - 16v³ + v⁴'], correct: 'C' },
-  { img: 'https://i.postimg.cc/hGM1Vz28/Screenshot-2025-04-22-224439.png', text: '', choices: ['(k + 1)(3(k + 1) + 1) / 2', '(k + 1)(3(k + 1) - 1) / 2', '(k + 1)(3k + 1) / 2'], correct: 'B' },
-  { img: 'https://i.postimg.cc/zGGC8XzV/Screenshot-2025-04-22-230709.png', text: '', choices: ['(8k³ + 28k² + 36k + 15) / 3', '(8k³ + 30k² + 35k + 17) / 3', '(8k³ + 30k² + 37k + 15) / 3'], correct: 'C' },
-  { img: 'https://i.postimg.cc/V6mLP5wh/Screenshot-2025-04-22-231221.png', text: '', choices: ['((n + 1)(n + 2)(2n + 3)) / 6', '((n + 1)(n + 2)(2n + 2)) / 6', '((n + 1)(n + 3)(2n + 3)) / 6'], correct: 'A' },
-  { img: 'https://i.postimg.cc/FsdfZdHb/Screenshot-2025-04-22-232640.png', text: '', choices: ['aₙ = 2n - 5', 'aₙ = 3n - 5', 'aₙ = 3n - 3'], correct: 'B' },
-  { img: 'https://i.postimg.cc/4NfGfjrY/Screenshot-2025-04-22-233411.png', text: '', choices: ['aₙ = (n + 1) / (4n - 1)', 'aₙ = (n + 1) / (4n + 1)', 'aₙ = (n - 1) / (4n - 1)'], correct: 'A' },
-  { img: 'https://i.postimg.cc/XJbh2CWr/Screenshot-2025-04-22-233739.png', text: '', choices: ['aₙ = (-1)ⁿ · 2ⁿ', 'aₙ = (-1)ⁿ⁺¹ · 2ⁿ⁻¹', 'aₙ = (-1)ⁿ · 2ⁿ⁻¹'], correct: 'C' },
-  { img: 'https://i.postimg.cc/v897YNWw/Screenshot-2025-04-22-234130.png', text: '', choices: ['aₙ = n / (n² + 1)', 'aₙ = n / (n² - 1)', 'aₙ = n / (n + 1)'], correct: 'A' },
-  { img: 'https://i.postimg.cc/RZ1bW0K9/Screenshot-2025-04-22-234636.png', text: '', choices: ['7056x¹⁵y¹⁰', '8064x¹⁴y¹⁰', '8064x¹⁵y¹⁰'], correct: 'C' }
-]; // existing question list here
+  const questions = [
+    { img: 'https://i.postimg.cc/Y2TsCsMR/Screenshot-2025-04-21-212831.png', text: '', choices: ['v³ + 10v² + 75v + 125', 'v³ + 15v² + 70v + 100', 'v³ + 15v² + 75v + 125'], correct: 'C' },
+    { img: 'https://i.postimg.cc/MK9L7pS6/Screenshot-2025-04-21-230153.png', text: '', choices: ['81y⁴ + 216y³x + 216y²x² + 96yx³ + 16x⁴', '81y⁴ + 216y³x + 200y²x² + 90yx³ + 16x⁴', '81y⁴ + 200y³x + 216y²x² + 96yx³ + 12x⁴'], correct: 'A' },
+    { img: 'https://i.postimg.cc/2jLnSKN7/Screenshot-2025-04-21-230204.png', text: '', choices: ['1 + 6u + 18u² + 27u³', '1 + 9u + 27u² + 27u³', '1 + 9u + 24u² + 30u³'], correct: 'B' },
+    { img: 'https://i.postimg.cc/vBFbLTDB/Screenshot-2025-04-21-230212.png', text: '', choices: ['125y³ - 75y² + 15y - 1', '125y³ - 70y² + 10y - 1', '125y³ - 75y² + 10y + 1'], correct: 'A' },
+    { img: 'https://i.postimg.cc/65DjQvPy/Screenshot-2025-04-21-230220.png', text: '', choices: ['256 - 256v + 90v² - 12v³ + v⁴', '256 - 240v + 96v² - 16v³ + v⁴', '256 - 256v + 96v² - 16v³ + v⁴'], correct: 'C' },
+    { img: 'https://i.postimg.cc/hGM1Vz28/Screenshot-2025-04-22-224439.png', text: '', choices: ['(k + 1)(3(k + 1) + 1) / 2', '(k + 1)(3(k + 1) - 1) / 2', '(k + 1)(3k + 1) / 2'], correct: 'B' },
+    { img: 'https://i.postimg.cc/zGGC8XzV/Screenshot-2025-04-22-230709.png', text: '', choices: ['(8k³ + 28k² + 36k + 15) / 3', '(8k³ + 30k² + 35k + 17) / 3', '(8k³ + 30k² + 37k + 15) / 3'], correct: 'C' },
+    { img: 'https://i.postimg.cc/V6mLP5wh/Screenshot-2025-04-22-231221.png', text: '', choices: ['((n + 1)(n + 2)(2n + 3)) / 6', '((n + 1)(n + 2)(2n + 2)) / 6', '((n + 1)(n + 3)(2n + 3)) / 6'], correct: 'A' },
+    { img: 'https://i.postimg.cc/FsdfZdHb/Screenshot-2025-04-22-232640.png', text: '', choices: ['aₙ = 2n - 5', 'aₙ = 3n - 5', 'aₙ = 3n - 3'], correct: 'B' },
+    { img: 'https://i.postimg.cc/4NfGfjrY/Screenshot-2025-04-22-233411.png', text: '', choices: ['aₙ = (n + 1) / (4n - 1)', 'aₙ = (n + 1) / (4n + 1)', 'aₙ = (n - 1) / (4n - 1)'], correct: 'A' },
+    { img: 'https://i.postimg.cc/XJbh2CWr/Screenshot-2025-04-22-233739.png', text: '', choices: ['aₙ = (-1)ⁿ · 2ⁿ', 'aₙ = (-1)ⁿ⁺¹ · 2ⁿ⁻¹', 'aₙ = (-1)ⁿ · 2ⁿ⁻¹'], correct: 'C' },
+    { img: 'https://i.postimg.cc/v897YNWw/Screenshot-2025-04-22-234130.png', text: '', choices: ['aₙ = n / (n² + 1)', 'aₙ = n / (n² - 1)', 'aₙ = n / (n + 1)'], correct: 'A' },
+    { img: 'https://i.postimg.cc/RZ1bW0K9/Screenshot-2025-04-22-234636.png', text: '', choices: ['7056x¹⁵y¹⁰', '8064x¹⁴y¹⁰', '8064x¹⁵y¹⁰'], correct: 'C' }
+  ];
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
+  }
 
-    const shuffledQuestions = shuffle([...questions]);
-    let currentQuestion = 0;
-    let score = 0;
+  const shuffledQuestions = shuffle([...questions]);
+  let currentQuestion = 0;
+  let score = 0;
 
-    window.onload = () => {
-      container.classList.add('show');
-      setTimeout(() => {
-        background.classList.add('blurred');
-        container.innerHTML = '<h2>Let\'s test your knowledge, are you ready?</h2>' + '<button class="start-btn" onclick="startGame()">Start</button>';
-        container.classList.remove('show');
-        setTimeout(() => container.classList.add('show'), 100);
-      }, 4000);
-    };
-
-    function startGame() {
-      currentQuestion = 0;
-      score = 0;
+  window.onload = () => {
+    container.classList.add('show');
+    setTimeout(() => {
+      background.classList.add('blurred');
+      container.innerHTML = '<h2>Let\'s test your knowledge, are you ready?</h2>' + '<button class="start-btn" onclick="startGame()">Start</button>';
       container.classList.remove('show');
-      setTimeout(() => showCountdown(), 500);
-    }
+      setTimeout(() => container.classList.add('show'), 100);
+    }, 4000);
+  };
 
-    function showCountdown() {
-      let countdownNumbers = ['3', '2', '1', 'GO!'];
-      let i = 0;
-      const countdownInterval = setInterval(() => {
-        if (i >= countdownNumbers.length) {
-          clearInterval(countdownInterval);
-          startQuestion();
-          return;
-        }
-        container.innerHTML = `<div class='countdown-number'>${countdownNumbers[i]}</div>`;
-        container.classList.remove('show');
-        setTimeout(() => container.classList.add('show'), 50);
-        i++;
-      }, 1000);
-    }
-
-    function startQuestion() {
-      background.classList.remove('blurred');
-      const q = shuffledQuestions[currentQuestion];
-      container.innerHTML = '';
-      if (q.img) container.innerHTML += `<img id="question-img" src="${q.img}" alt="Question" class="fade-in">`;
-      else if (q.text) container.innerHTML += `<h2>${q.text}</h2>`;
-      container.innerHTML += `
-        <div>
-          <button class="answer-btn" onclick="checkAnswer('A')">A) ${q.choices[0]}</button>
-          <button class="answer-btn" onclick="checkAnswer('B')">B) ${q.choices[1]}</button>
-          <button class="answer-btn" onclick="checkAnswer('C')">C) ${q.choices[2]}</button>
-        </div>
-      `;
-    }
-
-    function checkAnswer(choice) {
-      let q = shuffledQuestions[currentQuestion];
-      const result = document.createElement('div');
-      result.className = 'result-message';
-      const isCorrect = choice === q.correct;
-      if (isCorrect) score++;
-      result.textContent = isCorrect ? '✅ Correct!' : '❌ Wrong! Try again!';
-      document.body.appendChild(result);
-      setTimeout(() => {
-        result.remove();
-        if (isCorrect) {
-          currentQuestion++;
-          if (currentQuestion < shuffledQuestions.length) {
-            background.classList.add('blurred');
-            showCountdown();
-          } else {
-            container.innerHTML = `
-  <div style="animation: boom 1.5s ease forwards;">
-    <h2 style="font-size: 2.5em; color: #ffdd57; animation: pop-result 0.6s ease forwards;">🎉 You completed the battle! 🎉</h2>
-    <h3 style="font-size: 2em; margin-top: 10px;">Your Score: ${score} / ${shuffledQuestions.length}</h3>
-    <p style="font-size: 1.2em; margin-top: 5px; color: #cceeff;">You're a Math Warrior now! ⚔️</p>
-    <button class='start-btn' onclick='startGame()'>Play Again</button>
-  </div>
-  <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>`;
-
-setTimeout(() => launchConfetti(), 100);
-          }
-        }
-      }, 2000);
-    }
-  
-function launchConfetti() {
-  const canvas = document.getElementById('confetti-canvas');
-  const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  const confetti = Array.from({ length: 150 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 6 + 4,
-    d: Math.random() * 150 + 150,
-    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-    tilt: Math.random() * 10 - 10
-  }));
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    confetti.forEach(c => {
-      ctx.beginPath();
-      ctx.fillStyle = c.color;
-      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-      ctx.fill();
-    });
-    update();
-    requestAnimationFrame(draw);
+  function startGame() {
+    currentQuestion = 0;
+    score = 0;
+    container.classList.remove('show');
+    setTimeout(() => showCountdown(), 500);
   }
-  function update() {
-    confetti.forEach(c => {
-      c.y += Math.cos(c.d) + 1 + c.r / 2;
-      c.x += Math.sin(c.d);
-      if (c.y > canvas.height) c.y = -10;
-    });
+
+  function showCountdown() {
+    let countdownNumbers = ['3', '2', '1', 'GO!'];
+    let i = 0;
+    const countdownInterval = setInterval(() => {
+      if (i >= countdownNumbers.length) {
+        clearInterval(countdownInterval);
+        startQuestion();
+        return;
+      }
+      container.innerHTML = `<div class='countdown-number'>${countdownNumbers[i]}</div>`;
+      container.classList.remove('show');
+      setTimeout(() => container.classList.add('show'), 50);
+      i++;
+    }, 1000);
   }
-  draw();
+
+  function startQuestion() {
+    background.classList.remove('blurred');
+    const q = shuffledQuestions[currentQuestion];
+    container.innerHTML = '';
+    if (q.img) container.innerHTML += `<img id="question-img" src="${q.img}" alt="Question" class="fade-in">`;
+    else if (q.text) container.innerHTML += `<h2>${q.text}</h2>`;
+    container.innerHTML += `
+      <div>
+        <button class="answer-btn" onclick="checkAnswer('A')">A) ${q.choices[0]}</button>
+        <button class="answer-btn" onclick="checkAnswer('B')">B) ${q.choices[1]}</button>
+        <button class="answer-btn" onclick="checkAnswer('C')">C) ${q.choices[2]}</button>
+      </div>
+    `;
+  }
+
+  function checkAnswer(choice) {
+    let q = shuffledQuestions[currentQuestion];
+    const result = document.createElement('div');
+    result.className = 'result-message';
+    const isCorrect = choice === q.correct;
+    if (isCorrect) score++;
+    result.textContent = isCorrect ? '✅ Correct!' : '❌ Wrong! Try again!';
+    document.body.appendChild(result);
+    setTimeout(() => {
+      result.remove();
+      if (isCorrect) {
+        currentQuestion++;
+        if (currentQuestion < shuffledQuestions.length) {
+          background.classList.add('blurred');
+          showCountdown();
+        } else {
+          container.innerHTML = `
+            <div style="animation: boom 1.5s ease forwards;">
+              <h2 style="font-size: 2.5em; color: #ffdd57; animation: pop-result 0.6s ease forwards;">🎉 You completed the battle! 🎉</h2>
+              <h3 style="font-size: 2em; margin-top: 10px;">Your Score: ${score} / ${shuffledQuestions.length}</h3>
+              <p style="font-size: 1.2em; margin-top: 5px; color: #cceeff;">You're a Math Warrior now! ⚔️</p>
+              <button class='start-btn' onclick='startGame()'>Play Again</button>
+            </div>
+            <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>`;
+          setTimeout(() => launchConfetti(), 100);
+        }
+      }
+    }, 2000);
+  }
+
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const confetti = Array.from({ length: 150 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 150 + 150,
+      color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+      tilt: Math.random() * 10 - 10
+    }));
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.fillStyle = c.color;
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      update();
+      requestAnimationFrame(draw);
+    }
+    function update() {
+      confetti.forEach(c => {
+        c.y += Math.cos(c.d) + 1 + c.r / 2;
+        c.x += Math.sin(c.d);
+        if (c.y > canvas.height) c.y = -10;
+      });
+    }
+    draw();
+  }
+// Particle Effect
+const canvasParticles = document.getElementById('particles-canvas');
+const ctxParticles = canvasParticles.getContext('2d');
+canvasParticles.width = window.innerWidth;
+canvasParticles.height = window.innerHeight;
+
+const mathSymbols = ['+', '−', '=', '×', '÷', '∑', '∫', 'π', '∞', '√'];
+const particles = Array.from({ length: 50 }, () => ({
+  x: Math.random() * canvasParticles.width,
+  y: Math.random() * canvasParticles.height,
+  dx: (Math.random() - 0.5) * 0.5,
+  dy: (Math.random() - 0.5) * 0.5,
+  opacity: Math.random() * 0.5 + 0.2,
+  symbol: mathSymbols[Math.floor(Math.random() * mathSymbols.length)],
+  fontSize: Math.random() * 18 + 12
+}));
+
+function drawParticles() {
+  ctxParticles.clearRect(0, 0, canvasParticles.width, canvasParticles.height);
+  particles.forEach(p => {
+    ctxParticles.beginPath();
+    ctxParticles.font = `${p.fontSize}px Poppins`;
+    ctxParticles.fillStyle = `hsl(${(Date.now() / 50 + p.x + p.y) % 360}, 100%, 70%, ${p.opacity})`;
+    ctxParticles.fillText(p.symbol, p.x, p.y);
+    ctxParticles.fill();
+    p.x += p.dx;
+    p.y += p.dy;
+    if (p.x < 0 || p.x > canvasParticles.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvasParticles.height) p.dy *= -1;
+  });
+  requestAnimationFrame(drawParticles);
 }
+drawParticles();
 </script>
+<canvas id="particles-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;"></canvas>
 </body>
 </html>
