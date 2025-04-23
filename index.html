@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,271 +10,268 @@
       margin: 0;
       padding: 0;
       height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #1e3c72, #2a5298);
       color: white;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       flex-direction: column;
+      text-align: center;
     }
-
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      z-index: 1;
+      transition: filter 1s ease;
+    }
+    .background.blurred {
+      filter: blur(8px);
+    }
     .container {
+      position: relative;
+      z-index: 2;
       text-align: center;
       padding: 20px;
       width: 90%;
-      max-width: 400px;
+      max-width: 600px;
+      margin: auto;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 1.5s ease, transform 1.5s ease;
     }
-
-    h1 {
-      font-size: 2.5em;
+    .show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    h1, h2, .countdown-number {
       margin-bottom: 20px;
       text-transform: uppercase;
       letter-spacing: 1.5px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
       color: #ffdd57;
+      text-align: center;
     }
-
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .countdown-number {
+      font-size: 5em;
+      animation: pop 0.6s ease forwards;
     }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.5); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
     }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
+    .start-btn, .answer-btn {
+      padding: 12px 24px;
+      font-size: 1.2em;
+      font-weight: bold;
       border: none;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      background-color: #4CAF50;
-      color: white;
-      font-size: 1em;
+      border-radius: 30px;
+      background-color: #ffdd57;
+      color: #1e3c72;
       cursor: pointer;
+      margin: 10px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .start-btn:hover, .answer-btn:hover {
+      background-color: #ffd633;
+      transform: scale(1.05);
+    }
+    #question-img {
       width: 100%;
-      transition: background-color 0.3s ease;
+      max-width: 400px;
+      border-radius: 15px;
+      margin: 20px 0;
+      opacity: 0;
+      transition: opacity 1s ease;
     }
-
-    button:hover {
-      background-color: #45a049;
+    .fade-in {
+      opacity: 1 !important;
     }
-
+    .result-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(255, 255, 255, 0.9);
+      color: #1e3c72;
+      font-size: 2em;
+      padding: 20px 40px;
+      border-radius: 20px;
+      font-weight: bold;
+      animation: pop-result 1s forwards;
+      z-index: 5;
+    }
+    @keyframes pop-result {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
     @media (max-width: 600px) {
-      h1 {
+      h1, h2, .countdown-number {
         font-size: 1.8em;
       }
-
-      .card {
+      .container {
         padding: 15px;
       }
-
-      button {
-        font-size: 0.9em;
-        padding: 8px 16px;
-      }
-    }
-
-    #lobby-screen,
-    #waiting-screen,
-    #game-screen,
-    #player-screen {
-      display: none;
-    }
-
-    #boss-health-bar {
-      width: 100%;
-      background: #ddd;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-
-    #boss-health-fill {
-      height: 20px;
-      width: 100%;
-      background: #e74c3c;
-      border-radius: 10px;
-      transition: width 0.3s ease;
     }
   </style>
 </head>
-
 <body>
+  <div class="background" id="background"></div>
   <div class="container" id="main-screen">
     <h1>Math Battle Game</h1>
-    <div class="card">
-      <h2>Create a Game</h2>
-      <p>A code for the lobby will be randomly generated.</p>
-      <button id="create-lobby-btn">Create Lobby</button>
-    </div>
-    <div class="card">
-      <h2>Join Lobby</h2>
-      <input type="text" id="join-code-input" placeholder="Enter Lobby Code">
-      <input type="text" id="username-input" placeholder="Enter Your Name">
-      <button id="join-lobby-btn">Join Lobby</button>
-    </div>
   </div>
-
-  <div class="container" id="lobby-screen">
-    <h1>Lobby: <span id="lobby-code-display"></span></h1>
-    <p>Waiting for players to join...</p>
-    <div id="lobby-players">
-      <p><strong>Players in Lobby:</strong></p>
-      <ul id="players-list"></ul>
-    </div>
-    <button id="start-game-btn">Start Game</button>
-  </div>
-
-  <div class="container" id="waiting-screen">
-    <h1>Waiting for Host...</h1>
-    <p>Lobby Code: <span id="waiting-code-display"></span></p>
-    <p>Welcome, <span id="waiting-player-name"></span>!</p>
-  </div>
-
-  <div class="container" id="game-screen">
-    <div id="boss-health-bar">
-      <div id="boss-health-fill"></div>
-    </div>
-    <h2 id="question-text">Question will appear here</h2>
-    <div class="card" id="choices-container"></div>
-  </div>
-
-  <div class="container" id="player-screen">
-    <h2>Choose your answer:</h2>
-    <div class="card" id="player-choices"></div>
-  </div>
-
   <script>
-    let currentLobbyCode = "";
-    let bossHealth = 100;
-    const sampleQuestion = {
-      question: "What is the result of 3 + 4?",
-      choices: ["A", "B", "C", "D"],
-      correctIndex: 2 // "C"
+    const container = document.getElementById('main-screen');
+    const background = document.getElementById('background');
+
+    const questions = [
+  { img: 'https://i.postimg.cc/Y2TsCsMR/Screenshot-2025-04-21-212831.png', text: '', choices: ['v³ + 10v² + 75v + 125', 'v³ + 15v² + 70v + 100', 'v³ + 15v² + 75v + 125'], correct: 'C' },
+  { img: 'https://i.postimg.cc/MK9L7pS6/Screenshot-2025-04-21-230153.png', text: '', choices: ['81y⁴ + 216y³x + 216y²x² + 96yx³ + 16x⁴', '81y⁴ + 216y³x + 200y²x² + 90yx³ + 16x⁴', '81y⁴ + 200y³x + 216y²x² + 96yx³ + 12x⁴'], correct: 'A' },
+  { img: 'https://i.postimg.cc/2jLnSKN7/Screenshot-2025-04-21-230204.png', text: '', choices: ['1 + 6u + 18u² + 27u³', '1 + 9u + 27u² + 27u³', '1 + 9u + 24u² + 30u³'], correct: 'B' },
+  { img: 'https://i.postimg.cc/vBFbLTDB/Screenshot-2025-04-21-230212.png', text: '', choices: ['125y³ - 75y² + 15y - 1', '125y³ - 70y² + 10y - 1', '125y³ - 75y² + 10y + 1'], correct: 'A' },
+  { img: 'https://i.postimg.cc/65DjQvPy/Screenshot-2025-04-21-230220.png', text: '', choices: ['256 - 256v + 90v² - 12v³ + v⁴', '256 - 240v + 96v² - 16v³ + v⁴', '256 - 256v + 96v² - 16v³ + v⁴'], correct: 'C' },
+  { img: 'https://i.postimg.cc/hGM1Vz28/Screenshot-2025-04-22-224439.png', text: '', choices: ['(k + 1)(3(k + 1) + 1) / 2', '(k + 1)(3(k + 1) - 1) / 2', '(k + 1)(3k + 1) / 2'], correct: 'B' },
+  { img: 'https://i.postimg.cc/zGGC8XzV/Screenshot-2025-04-22-230709.png', text: '', choices: ['(8k³ + 28k² + 36k + 15) / 3', '(8k³ + 30k² + 35k + 17) / 3', '(8k³ + 30k² + 37k + 15) / 3'], correct: 'C' },
+  { img: 'https://i.postimg.cc/V6mLP5wh/Screenshot-2025-04-22-231221.png', text: '', choices: ['((n + 1)(n + 2)(2n + 3)) / 6', '((n + 1)(n + 2)(2n + 2)) / 6', '((n + 1)(n + 3)(2n + 3)) / 6'], correct: 'A' },
+  { img: 'https://i.postimg.cc/FsdfZdHb/Screenshot-2025-04-22-232640.png', text: '', choices: ['aₙ = 2n - 5', 'aₙ = 3n - 5', 'aₙ = 3n - 3'], correct: 'B' },
+  { img: 'https://i.postimg.cc/4NfGfjrY/Screenshot-2025-04-22-233411.png', text: '', choices: ['aₙ = (n + 1) / (4n - 1)', 'aₙ = (n + 1) / (4n + 1)', 'aₙ = (n - 1) / (4n - 1)'], correct: 'A' },
+  { img: 'https://i.postimg.cc/XJbh2CWr/Screenshot-2025-04-22-233739.png', text: '', choices: ['aₙ = (-1)ⁿ · 2ⁿ', 'aₙ = (-1)ⁿ⁺¹ · 2ⁿ⁻¹', 'aₙ = (-1)ⁿ · 2ⁿ⁻¹'], correct: 'C' },
+  { img: 'https://i.postimg.cc/v897YNWw/Screenshot-2025-04-22-234130.png', text: '', choices: ['aₙ = n / (n² + 1)', 'aₙ = n / (n² - 1)', 'aₙ = n / (n + 1)'], correct: 'A' },
+  { img: 'https://i.postimg.cc/RZ1bW0K9/Screenshot-2025-04-22-234636.png', text: '', choices: ['7056x¹⁵y¹⁰', '8064x¹⁴y¹⁰', '8064x¹⁵y¹⁰'], correct: 'C' }
+]; // existing question list here
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    const shuffledQuestions = shuffle([...questions]);
+    let currentQuestion = 0;
+    let score = 0;
+
+    window.onload = () => {
+      container.classList.add('show');
+      setTimeout(() => {
+        background.classList.add('blurred');
+        container.innerHTML = '<h2>Let\'s test your knowledge, are you ready?</h2>' + '<button class="start-btn" onclick="startGame()">Start</button>';
+        container.classList.remove('show');
+        setTimeout(() => container.classList.add('show'), 100);
+      }, 4000);
     };
 
-    const correctAnswerLetter = ["A", "B", "C", "D"][sampleQuestion.correctIndex];
-
-    document.getElementById('create-lobby-btn').addEventListener('click', () => {
-      currentLobbyCode = Math.random().toString(36).substr(2, 6).toUpperCase();
-      document.getElementById('main-screen').style.display = 'none';
-      document.getElementById('lobby-screen').style.display = 'block';
-      document.getElementById('lobby-code-display').textContent = currentLobbyCode;
-
-      const players = ["Host (You)"];
-      localStorage.setItem('lobbyCode', currentLobbyCode);
-      localStorage.setItem('players', JSON.stringify(players));
-      localStorage.setItem('answers', JSON.stringify([]));
-
-      renderPlayers();
-    });
-
-    document.getElementById('join-lobby-btn').addEventListener('click', () => {
-      const enteredCode = document.getElementById('join-code-input').value.trim().toUpperCase();
-      const username = document.getElementById('username-input').value.trim();
-      const storedCode = localStorage.getItem('lobbyCode');
-
-      if (!enteredCode || !username) {
-        alert('Please enter both a lobby code and your name.');
-        return;
-      }
-
-      if (enteredCode === storedCode) {
-        let players = JSON.parse(localStorage.getItem('players')) || [];
-        players.push(username);
-        localStorage.setItem('players', JSON.stringify(players));
-
-        document.getElementById('main-screen').style.display = 'none';
-        document.getElementById('player-screen').style.display = 'block';
-        renderPlayerChoices();
-      } else {
-        alert('Invalid lobby code.');
-      }
-    });
-
-    function renderPlayers() {
-      const players = JSON.parse(localStorage.getItem('players')) || [];
-      const playersList = document.getElementById('players-list');
-      playersList.innerHTML = '';
-      players.forEach(player => {
-        const li = document.createElement('li');
-        li.textContent = player;
-        playersList.appendChild(li);
-      });
+    function startGame() {
+      currentQuestion = 0;
+      score = 0;
+      container.classList.remove('show');
+      setTimeout(() => showCountdown(), 500);
     }
 
-    document.getElementById('start-game-btn').addEventListener('click', () => {
-      document.getElementById('lobby-screen').style.display = 'none';
-      document.getElementById('game-screen').style.display = 'block';
-      document.getElementById('question-text').textContent = sampleQuestion.question;
+    function showCountdown() {
+      let countdownNumbers = ['3', '2', '1', 'GO!'];
+      let i = 0;
+      const countdownInterval = setInterval(() => {
+        if (i >= countdownNumbers.length) {
+          clearInterval(countdownInterval);
+          startQuestion();
+          return;
+        }
+        container.innerHTML = `<div class='countdown-number'>${countdownNumbers[i]}</div>`;
+        container.classList.remove('show');
+        setTimeout(() => container.classList.add('show'), 50);
+        i++;
+      }, 1000);
+    }
 
-      const container = document.getElementById('choices-container');
+    function startQuestion() {
+      background.classList.remove('blurred');
+      const q = shuffledQuestions[currentQuestion];
       container.innerHTML = '';
-      sampleQuestion.choices.forEach(choice => {
-        const div = document.createElement('div');
-        div.textContent = `${choice}`;
-        container.appendChild(div);
-      });
+      if (q.img) container.innerHTML += `<img id="question-img" src="${q.img}" alt="Question" class="fade-in">`;
+      else if (q.text) container.innerHTML += `<h2>${q.text}</h2>`;
+      container.innerHTML += `
+        <div>
+          <button class="answer-btn" onclick="checkAnswer('A')">A) ${q.choices[0]}</button>
+          <button class="answer-btn" onclick="checkAnswer('B')">B) ${q.choices[1]}</button>
+          <button class="answer-btn" onclick="checkAnswer('C')">C) ${q.choices[2]}</button>
+        </div>
+      `;
+    }
+
+    function checkAnswer(choice) {
+      let q = shuffledQuestions[currentQuestion];
+      const result = document.createElement('div');
+      result.className = 'result-message';
+      const isCorrect = choice === q.correct;
+      if (isCorrect) score++;
+      result.textContent = isCorrect ? '✅ Correct!' : '❌ Wrong! Try again!';
+      document.body.appendChild(result);
+      setTimeout(() => {
+        result.remove();
+        if (isCorrect) {
+          currentQuestion++;
+          if (currentQuestion < shuffledQuestions.length) {
+            background.classList.add('blurred');
+            showCountdown();
+          } else {
+            container.innerHTML = `
+  <div style="animation: boom 1.5s ease forwards;">
+    <h2 style="font-size: 2.5em; color: #ffdd57; animation: pop-result 0.6s ease forwards;">🎉 You completed the battle! 🎉</h2>
+    <h3 style="font-size: 2em; margin-top: 10px;">Your Score: ${score} / ${shuffledQuestions.length}</h3>
+    <p style="font-size: 1.2em; margin-top: 5px; color: #cceeff;">You're a Math Warrior now! ⚔️</p>
+    <button class='start-btn' onclick='startGame()'>Play Again</button>
+  </div>
+  <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></canvas>`;
+
+setTimeout(() => launchConfetti(), 100);
+          }
+        }
+      }, 2000);
+    }
+  
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const confetti = Array.from({ length: 150 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 6 + 4,
+    d: Math.random() * 150 + 150,
+    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+    tilt: Math.random() * 10 - 10
+  }));
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach(c => {
+      ctx.beginPath();
+      ctx.fillStyle = c.color;
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fill();
     });
-
-    function renderPlayerChoices() {
-      const container = document.getElementById('player-choices');
-      container.innerHTML = '';
-      sampleQuestion.choices.forEach((choice, index) => {
-        const btn = document.createElement('button');
-        btn.textContent = choice;
-        btn.onclick = () => submitAnswer(choice);
-        container.appendChild(btn);
-      });
-    }
-
-    function submitAnswer(choice) {
-      const username = document.getElementById('username-input')?.value.trim() || 'Host (You)';
-      let answers = JSON.parse(localStorage.getItem('answers')) || [];
-      if (answers.find(a => a.name === username)) return;
-      const correct = choice === correctAnswerLetter;
-      answers.push({ name: username, correct });
-      localStorage.setItem('answers', JSON.stringify(answers));
-
-      const buttons = document.querySelectorAll('#player-choices button');
-      buttons.forEach(btn => btn.disabled = true);
-
-      checkAllAnswered();
-    }
-
-    function checkAllAnswered() {
-      const players = JSON.parse(localStorage.getItem('players')) || [];
-      const answers = JSON.parse(localStorage.getItem('answers')) || [];
-
-      if (answers.length === players.length) {
-        const correctCount = answers.filter(a => a.correct).length;
-        const damage = correctCount * 10;
-        bossHealth -= damage;
-        if (bossHealth < 0) bossHealth = 0;
-        document.getElementById('boss-health-fill').style.width = bossHealth + '%';
-        alert(`${correctCount} players answered correctly. Boss took ${damage} damage!`);
-      }
-    }
-
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'players') renderPlayers();
-      if (e.key === 'answers') checkAllAnswered();
+    update();
+    requestAnimationFrame(draw);
+  }
+  function update() {
+    confetti.forEach(c => {
+      c.y += Math.cos(c.d) + 1 + c.r / 2;
+      c.x += Math.sin(c.d);
+      if (c.y > canvas.height) c.y = -10;
     });
-  </script>
+  }
+  draw();
+}
+</script>
 </body>
-
 </html>
